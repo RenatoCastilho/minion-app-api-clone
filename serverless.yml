@@ -13,11 +13,17 @@ custom:
     webpackConfig: ./webpack.config.js
     includeModules: true
 
+  secrets: ${file(secrets.json)}
+
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: ${self:custom.secrets.NODE_ENV}
   region: us-east-1
+  environment: 
+    NODE_ENV: ${self:custom.secrets.NODE_ENV}
+    EMAIL: ${self:custom.secrets.EMAIL}
+    DOMAIN: ${self:custom.secrets.DOMAIN} 
 
     # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
@@ -31,6 +37,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - ses:sendEmail
       Resource: "arn:aws:dynamodb:us-east-1:689646474292:table/minions-pedidos"
 
 functions:
@@ -90,6 +97,14 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+
+  send:
+    handler: mailer.send
+    events:
+      - http:
+        path: email/send
+        method: post
+        cors: true
 
 # Create our resources with separate CloudFormation templates
 resources:
