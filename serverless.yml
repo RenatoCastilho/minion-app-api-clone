@@ -40,6 +40,11 @@ provider:
         - ses:sendEmail
       Resource: "arn:aws:dynamodb:us-east-1:689646474292:table/minions-pedidos"
 
+    - Effect: Allow
+      Action:
+        - "ses:SendEmail"
+      Resource: "*"
+
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
   # - path: url path is /notes
@@ -102,9 +107,9 @@ functions:
     handler: mailer.send
     events:
       - http:
-        path: email/send
-        method: post
-        cors: true
+          path: email/send
+          method: post
+          cors: true
 
 # Create our resources with separate CloudFormation templates
 resources:
