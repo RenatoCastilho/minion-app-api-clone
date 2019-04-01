@@ -42,12 +42,12 @@ function generateEmailParams (body){
             Body:{
                 Text: {
                     Charset: 'UTF-8',
-                    Data: `Message sent from email ${email} by ${name} \nContent: ${content}`
+                    Data: `Pedido de: ${name}, email: ${email} \nContent: ${content}`
                 }
             },
             Subject: {
                 Charset: 'UTF-8',
-                Data: `You received a message from ${myDomain}!`
+                Data: `Você recebeu uma nova encomenda na Minion Store!`
             }
         }
     }
